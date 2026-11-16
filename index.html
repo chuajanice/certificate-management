@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Barangay Certificate Management System (Demonstration)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- Mobile top bar with navigation toggle -->
+    <header class="topbar no-print">
+      <button class="icon-btn" id="menuToggle" type="button" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false">&#9776;</button>
+      <span class="topbar-title">Barangay Certificate Management System</span>
+    </header>
+    <div class="scrim" id="scrim" hidden></div>
+
+    <!-- Sidebar navigation -->
+    <aside class="sidebar no-print" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark" id="sidebarLogo" aria-hidden="true"></div>
+        <div class="brand-text">
+          <div class="brand-name">Barangay Certificate Management System</div>
+          <div class="brand-sub" id="sidebarBarangay">Barangay Demo</div>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#dashboard" data-page="dashboard">Dashboard</a>
+        <a href="#indigency" data-page="indigency">Certificate of Indigency</a>
+        <a href="#residency" data-page="residency">Certificate of Residency</a>
+        <a href="#records" data-page="records">Records Management</a>
+        <a href="#settings" data-page="settings">Settings</a>
+      </nav>
+      <p class="sidebar-note">Demonstration prototype. Records, settings and images are saved only in this browser.</p>
+    </aside>
+
+    <main class="main">
+
+      <!-- Dashboard -->
+      <section class="page" id="page-dashboard" hidden>
+        <header class="page-head">
+          <div>
+            <h1>Dashboard</h1>
+            <p>Certificate requests logged in this browser. Sample entries are marked.</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn btn-primary" href="#indigency">New Certificate of Indigency</a>
+            <a class="btn btn-ghost" href="#residency">New Certificate of Residency</a>
+          </div>
+        </header>
+
+        <div class="stat-grid">
+          <div class="stat">
+            <span class="stat-label">Total certificate requests</span>
+            <strong id="statRequests">0</strong>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Total certificates generated</span>
+            <strong id="statGenerated">0</strong>
+            <small>Printed or downloaded</small>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Certificates of Indigency</span>
+            <strong id="statIndigency">0</strong>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Certificates of Residency</span>
+            <strong id="statResidency">0</strong>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h2>Recent transactions</h2>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Full name</th>
+                  <th>Certificate type</th>
+                  <th>Purpose</th>
+                  <th>Date requested</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="recentBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Certificate of Indigency form -->
+      <section class="page" id="page-indigency" hidden>
+        <header class="page-head">
+          <div>
+            <h1>Certificate of Indigency</h1>
+            <p>Enter the resident's details. The certificate is generated, previewed and saved to records.</p>
+          </div>
+        </header>
+
+        <form class="card form-card" id="indigencyForm" novalidate>
+          <div class="form-grid">
+            <div class="field span-2">
+              <label for="ind-fullName">Full name</label>
+              <input id="ind-fullName" name="fullName" type="text" maxlength="100" autocomplete="off" placeholder="e.g. Juan Dela Cruz" />
+              <span class="error" aria-live="polite"></span>
+            </div>
+            <div class="field">
+              <label for="ind-gender">Gender</label>
+              <select id="ind-gender" name="gender">
+                <option value="">Select gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
+              <span class="error" aria-live="polite"></span>
+            </div>
+            <div class="field">
+              <label for="ind-civilStatus">Civil status</label>
+              <select id="ind-civilStatus" name="civilStatus">
+                <option value="">Select civil status</option>
+                <option>Single</option>
+                <option>Married</option>
+                <option>Widowed</option>
+                <option>Separated</option>
+              </select>
+              <span class="error" aria-live="polite"></span>
+            </div>
+            <div class="field span-2">
+              <label for="ind-purpose">Purpose</label>
+              <input id="ind-purpose" name="purpose" type="text" maxlength="160" placeholder="e.g. Medical assistance" />
+              <span class="error" aria-live="polite"></span>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-ghost" type="reset">Clear form</button>
+            <button class="btn btn-primary" id="indigencySubmit" type="submit">Generate certificate</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Certificate of Residency form -->
+      <section class="page" id="page-residency" hidden>
+        <header class="page-head">
+          <div>
+            <h1>Certificate of Residency</h1>
+            <p>Enter the resident's details. The certificate is generated, previewed and saved to records.</p>
+          </div>
+        </header>
+
+        <form class="card form-card" id="residencyForm" novalidate>
+          <div class="form-grid">
+            <div class="field span-2">
+              <label for="res-fullName">Full name</label>
+              <input id="res-fullName" name="fullName" type="text" maxlength="100" autocomplete="off" placeholder="e.g. Maria Clara Reyes" />
+              <span class="error" aria-live="polite"></span>
+            </div>
+            <div class="field">
+              <label for="res-age">Age</label>
+              <input id="res-age" name="age" type="number" min="1" max="150" step="1" inputmode="numeric" />
+              <span class="error" aria-live="polite"></span>
+            </div>
+            <div class="field">
+              <label for="res-gender">Gender</label>
+              <select id="res-gender" name="gender">
+                <option value="">Select gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
+              <span class="error" aria-live="polite"></span>
+            </div>
+            <div class="field">
+              <label for="res-civilStatus">Civil status</label>
+              <select id="res-civilStatus" name="civilStatus">
+                <option value="">Select civil status</option>
+                <option>Single</option>
+                <option>Married</option>
+                <option>Widowed</option>
+                <option>Separated</option>
+              </select>
+              <span class="error" aria-live="polite"></span>
+            </div>
+            <div class="field">
+              <label for="res-nationality">Nationality</label>
+              <input id="res-nationality" name="nationality" type="text" maxlength="60" value="Filipino" />
+              <span class="error" aria-live="polite"></span>
+            </div>
+            <div class="field">
+              <label for="res-residencyStatus">Residency status</label>
+              <select id="res-residencyStatus" name="residencyStatus">
+                <option value="">Select status</option>
+                <option>Live</option>
+                <option>Leave</option>
+                <option>Force to Leave</option>
+              </select>
+              <span class="error" aria-live="polite"></span>
+            </div>
+            <div class="field span-2">
+              <label for="res-address">Complete address</label>
+              <textarea id="res-address" name="address" rows="2" maxlength="200" placeholder="Purok / street, barangay, municipality"></textarea>
+              <span class="error" aria-live="polite"></span>
+            </div>
+            <div class="field span-2">
+              <label for="res-purpose">Purpose</label>
+              <input id="res-purpose" name="purpose" type="text" maxlength="160" placeholder="e.g. Bank account opening" />
+              <span class="error" aria-live="polite"></span>
+            </div>
+          </div>
+
+          <h3 class="form-section">Certificate issued upon request of</h3>
+          <div class="form-grid">
+            <div class="field">
+              <label for="res-requestedBy">Full name</label>
+              <input id="res-requestedBy" name="requestedBy" type="text" maxlength="100" value="Bearer" />
+              <span class="error" aria-live="polite"></span>
+              <p class="field-hint">Leave as "Bearer" or enter another person's full name.</p>
+            </div>
+            <div class="field">
+              <label for="res-relationship">Role or relationship to the holder</label>
+              <input id="res-relationship" name="relationship" type="text" maxlength="60" placeholder="Optional, e.g. Son" />
+              <span class="error" aria-live="polite"></span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-ghost" type="reset">Clear form</button>
+            <button class="btn btn-primary" id="residencySubmit" type="submit">Generate certificate</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Certificate preview -->
+      <section class="page page-preview" id="page-preview" hidden>
+        <header class="page-head">
+          <div>
+            <h1>Certificate preview</h1>
+            <p id="previewMeta"></p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-ghost" id="previewBack" type="button">Back to form</button>
+            <button class="btn btn-secondary" id="previewPdf" type="button">Download PDF</button>
+            <button class="btn btn-primary" id="previewPrint" type="button">Print certificate</button>
+          </div>
+        </header>
+        <div class="preview-stage" id="previewStage">
+          <div class="preview-fit" id="previewFit"></div>
+        </div>
+      </section>
+
+      <!-- Records management -->
+      <section class="page" id="page-records" hidden>
+        <header class="page-head">
+          <div>
+            <h1>Records management</h1>
+            <p>Certificate requests saved in this browser. Each certificate type has its own list and Excel file.</p>
+          </div>
+        </header>
+
+        <div class="tabs" role="tablist">
+          <button class="tab" role="tab" type="button" data-type="indigency" aria-selected="true">
+            Certificate of Indigency <span class="count" data-count="indigency"></span>
+          </button>
+          <button class="tab" role="tab" type="button" data-type="residency" aria-selected="false">
+            Certificate of Residency <span class="count" data-count="residency"></span>
+          </button>
+        </div>
+
+        <div class="card">
+          <div class="toolbar">
+            <div class="field">
+              <label for="recSearch">Search by name</label>
+              <input id="recSearch" type="search" placeholder="Type a name" autocomplete="off" />
+            </div>
+            <div class="field">
+              <label for="recDate">Filter by date</label>
+              <input id="recDate" type="date" />
+            </div>
+            <div class="field">
+              <label for="recSort">Sort by date</label>
+              <select id="recSort">
+                <option value="desc">Newest first</option>
+                <option value="asc">Oldest first</option>
+              </select>
+            </div>
+            <div class="toolbar-actions">
+              <button class="btn btn-secondary" id="exportBtn" type="button">Export to Excel</button>
+              <button class="btn btn-ghost" id="clearFilters" type="button">Clear filters</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Full name</th>
+                  <th>Gender</th>
+                  <th>Purpose</th>
+                  <th>Date generated</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="recordsBody"></tbody>
+            </table>
+          </div>
+          <p class="empty" id="recordsEmpty" hidden></p>
+        </div>
+      </section>
+
+      <!-- Settings -->
+      <section class="page" id="page-settings" hidden>
+        <header class="page-head">
+          <div>
+            <h1>Settings</h1>
+            <p>Barangay details, official images and signatories used on every certificate.</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-ghost" id="settingsDiscard" type="button">Discard changes</button>
+            <button class="btn btn-primary" id="settingsSave" type="button">Save settings</button>
+          </div>
+        </header>
+        <p class="notice">These are sample barangay details. Replace them with your barangay's information before any real use.</p>
+        <div id="settingsRoot"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Shared dialog and notifications -->
+  <div class="modal-backdrop" id="modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <h2 id="modalTitle"></h2>
+        <button class="icon-btn" id="modalClose" type="button" aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-foot" id="modalFoot"></div>
+    </div>
+  </div>
+  <div class="toasts no-print" id="toasts" aria-live="polite"></div>
+
+  <!-- Third-party libraries (browser builds from public CDNs) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- Application scripts -->
+  <script src="js/utils.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/records.js"></script>
+  <script src="js/certificates.js"></script>
+  <script src="js/export.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
